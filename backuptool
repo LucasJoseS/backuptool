@@ -5,10 +5,20 @@ from pathlib import Path
 import shutil
 
 
-origin = Path(argv[1])
-dest   = Path(argv[2])
+class FileUtils():
+    @staticmethod
+    def copy(origin: Path, dest: Path):
+        assert not dest.is_file()
+        assert origin.exists()
 
-assert origin.exists() and origin.is_dir()
-assert not dest.exists()
+        if dest.exists() and dest.is_dir():
+            dest = dest / origin.name
 
-shutil.copytree(origin, dest)
+        shutil.copytree(origin, dest)
+
+
+if __name__ == "__main__":
+    origin = Path(argv[1])
+    dest   = Path(argv[2])
+
+    FileUtils.copy(origin, dest)
