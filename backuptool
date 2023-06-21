@@ -1,0 +1,14 @@
+#! /usr/bin/python3
+
+from sys import argv
+from pathlib import Path
+import shutil
+
+
+origin = Path(argv[1])
+dest   = Path(argv[2])
+
+assert origin.exists() and origin.is_dir()
+assert not dest.exists()
+
+shutil.copytree(origin, dest)
