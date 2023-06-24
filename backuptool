@@ -3,16 +3,23 @@ from pathlib import Path
 from datetime import date
 import shutil
 import yaml
+import os
 
-from typing import Dict, AnyStr, List
+from typing import Dict, AnyStr
 
 class BackupTarget():
     def __init__(self, path: Path, category: AnyStr):
+        if not isinstance(path, Path):
+            path = Path(path)
+
         self.path       = path
         self.category   = category
 
 
 def backup(target: BackupTarget, backup_root: Path):
+    if not isinstance(backup_root, Path):
+        backup_root = Path(backup_root)
+
     today = date.today()
 
     year_path  = backup_root / str(today.year)
@@ -33,15 +40,23 @@ def copy(origin: Path, dest: Path):
     else:
         shutil.copytree(origin, dest)
 
+def get_config_file():
+    home = os.getenv("HOME")
+    config = Path(f"{home}/.config/backuptool.conf")
+
+    if not config.exists():
+        print(f"Config file not exist: {config}")
+        exit(1)
+
+    return config
 
 if __name__ == "__main__":
-    config = Path("./backuptool.conf")
+    config = get_config_file()
     config = yaml.load(config.open(), yaml.loader.Loader)
 
     general_config: Dict    = config['general']
     categorys: Dict         = config['backup']
 
-    backup_ts: List[BackupTarget] = list()
     for category, paths in categorys.items():
         for path in paths:
-            backup(BackupTarget(Path(path), category), Path(general_config['backup-root-path']))
+            backup(BackupTarget(path, category), general_config['backup-root-path'])
