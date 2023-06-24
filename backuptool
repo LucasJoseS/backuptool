@@ -1,24 +1,47 @@
 #! /usr/bin/python3
-
-from sys import argv
 from pathlib import Path
+from datetime import date
 import shutil
+import yaml
+
+from typing import Dict, AnyStr, List
+
+class BackupTarget():
+    def __init__(self, path: Path, category: AnyStr):
+        self.path       = path
+        self.category   = category
 
 
-class FileUtils():
-    @staticmethod
-    def copy(origin: Path, dest: Path):
-        assert not dest.is_file()
-        assert origin.exists()
+def backup(target: BackupTarget, backup_root: Path):
+    today = date.today()
 
-        if dest.exists() and dest.is_dir():
-            dest = dest / origin.name
+    year_path  = backup_root / str(today.year)
+    month_path = year_path / str(today.month)
+    category_path = month_path / str(target.category)
 
+    category_path.mkdir(exist_ok=True, parents=True)
+    copy(target.path, category_path)
+
+def copy(origin: Path, dest: Path):
+    assert origin.is_absolute() and origin.exists()
+
+    if dest.exists() and dest.is_dir():
+        dest = dest / origin.name
+
+    if origin.is_file():
+        shutil.copy(origin, dest)
+    else:
         shutil.copytree(origin, dest)
 
 
 if __name__ == "__main__":
-    origin = Path(argv[1])
-    dest   = Path(argv[2])
+    config = Path("./backuptool.conf")
+    config = yaml.load(config.open(), yaml.loader.Loader)
 
-    FileUtils.copy(origin, dest)
+    general_config: Dict    = config['general']
+    categorys: Dict         = config['backup']
+
+    backup_ts: List[BackupTarget] = list()
+    for category, paths in categorys.items():
+        for path in paths:
+            backup(BackupTarget(Path(path), category), Path(general_config['backup-root-path']))
