@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(backuptool)
+project(BackupTool CXX)
 
-find_package(yaml-cpp REQUIRED)
+set(CMAKE_EXPORT_COMPILE_COMMANDS=true)
 
-add_executable(backuptool backuptool.cpp)
-target_link_libraries(backuptool PUBLIC yaml-cpp)
+add_subdirectory(external)
+
+add_executable(BackupTool backuptool.cpp)
+target_link_libraries(BackupTool yaml-cpp)
