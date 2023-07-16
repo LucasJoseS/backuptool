@@ -36,25 +36,15 @@ class BackupTarget {
   }
 };
 
+#include "./config.cpp"
+
 int main() {
-  std::string home = std::getenv("HOME");
+  auto config = backuptool::config();
 
-  std::ifstream fin(home + "/.config/backuptool.conf");
-  auto config = YAML::Load(fin);
+  auto targets = config.targets();
+  for(auto target: targets) {
+    BackupTarget btarget(target.path, target.category);
 
-  auto general          = config["general"];
-  auto target_categorys = config["backup"];
-
-  std::filesystem::path backup_root_path(general["backup-root-path"].as<std::string>());
-  for(auto target: target_categorys) {
-    std::stringstream paths(target.second.as<std::string>());
-    std::string path_s;
-
-    while(paths >> path_s) {
-      std::filesystem::path path(path_s);
-
-      BackupTarget backup(path, target.first.as<std::string>());
-      backup.backup(backup_root_path);
-    }
+    btarget.backup(config.backup_root_path() / "test");
   }
 }

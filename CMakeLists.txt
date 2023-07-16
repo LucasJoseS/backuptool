@@ -8,4 +8,5 @@ add_subdirectory(src)
 add_executable(backuptool src/main.cpp)
 target_link_libraries(backuptool
   yaml-cpp
+  backup-tool
   )
