@@ -1,32 +1,32 @@
 #ifndef BACKUPTOOL
 #define BACKUPTOOL
-#include <string>
 #include <filesystem>
-#include <vector>
 #include <fstream>
+#include <string>
+#include <vector>
 
 #include <yaml-cpp/yaml.h>
 
 using namespace std;
 
-struct target{
-  string            category;
-  filesystem::path  path;
-};
+typedef struct {
+  string category;
+  filesystem::path path;
+} target;
 
 namespace backuptool {
-  class config {
-  private:
+class config {
+private:
   YAML::Node yaml;
 
-  public:
+public:
   config();
   filesystem::path backup_root_path();
-  vector<struct target> targets();
-  };
+  vector<target> targets();
+};
 
-  namespace backup {
-      int simpleBackup(struct target target, filesystem::path backup_root_path);
-  }
-}
+namespace backup {
+int simpleBackup(target target, filesystem::path backup_root_path);
+} // namespace backup
+} // namespace backuptool
 #endif // !BACKUPTOOL

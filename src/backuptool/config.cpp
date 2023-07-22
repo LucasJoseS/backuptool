@@ -2,9 +2,16 @@
 
 backuptool::config::config() {
     string home = getenv("HOME");
-    ifstream config_stream(home + "/.config/backuptool.conf");
-
-    this->yaml = YAML::Load(config_stream);
+    ifstream possible_streams[] {
+      ifstream(home + "/.config/backuptool.conf"),
+      ifstream(home + ".backuptool.conf")
+    };
+    
+    if(possible_streams[0].is_open()) {
+      this->yaml = YAML::Load(possible_streams[0]);
+    } else if(possible_streams[1].is_open()) {
+      this->yaml = YAML::Load(possible_streams[1]);
+    }
   }
 
 filesystem::path backuptool::config::backup_root_path() {
@@ -12,8 +19,8 @@ filesystem::path backuptool::config::backup_root_path() {
     return filesystem::path(spath);
   }
 
-vector<struct target> backuptool::config::targets() {
-  vector<struct target> targets;
+vector<target> backuptool::config::targets() {
+  vector<target> targets;
 
   for(auto target: this->yaml["backup"]) {
     std::stringstream paths(target.second.as<std::string>());
