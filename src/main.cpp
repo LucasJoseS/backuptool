@@ -1,10 +1,16 @@
 #include <backuptool.hpp>
+#include <iostream>
+
+using namespace std;
 
 int main() {
-  auto config = backuptool::config();
+  auto config = backuptool::config::get_user_config();
+  cout << "Using backup-root-path: " << config.root_path << endl << endl;
 
-  auto targets = config.targets();
-  for (target actual : targets) {
-    backuptool::backup::simpleBackup(actual, config.backup_root_path());
+  for (target_t actual_target : config.targets) {
+    cout << "saving:  " << actual_target.category << endl;
+    cout << "in path: " << actual_target.root_path << endl;
+
+    backuptool::backup::object_backup(actual_target, config.root_path);
   }
 }
