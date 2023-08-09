@@ -1,7 +1,7 @@
 add_library(backup STATIC
   config.cpp
   backup.cpp
-  target_t.cpp
+  target.cpp
   )
 
 target_include_directories(backup PUBLIC

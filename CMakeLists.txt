@@ -7,8 +7,12 @@ add_subdirectory(external)
 add_subdirectory(src)
 
 add_executable(backuptool src/main.cpp)
+add_executable(backuptool_test src/main_test.cpp)
 
 target_link_libraries(backuptool
-  yaml-cpp
+  backup
+  )
+
+target_link_libraries(backuptool_test
   backup
   )

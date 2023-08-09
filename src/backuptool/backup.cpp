@@ -1,5 +1,6 @@
 #include <backuptool.hpp>
 #include <filesystem>
+#include <fstream>
 
 using namespace std;
 
@@ -9,10 +10,11 @@ using namespace std;
 
 std::tm *current_localtime();
 vector<filesystem::path> list_childrens_files(filesystem::path root_path);
-filesystem::path destination_path(std::tm *time, target_t target,
+filesystem::path destination_path(std::tm *time, target target,
                                   filesystem::path backup_root_path);
 
-int backuptool::backup::simple_backup(target_t target,
+
+int backuptool::backup::simple_backup(target target,
                                       filesystem::path backup_root_path) {
   auto time = current_localtime();
   auto dest_path = destination_path(time, target, backup_root_path);
@@ -22,20 +24,19 @@ int backuptool::backup::simple_backup(target_t target,
   return true;
 }
 
-#include <iostream>
-int backuptool::backup::object_backup(target_t target,
+int backuptool::backup::object_backup(target target,
                                       std::filesystem::path backup_root_path) {
   auto objects_path = backup_root_path / ".backup" / "objects";
+  ofstream category_map = objects_path / to_string((size_t) 0);
 
-  for (auto child: target.get_childs(target)) {
-    cout << child << " ";
+  string category_hash = to_string(hash<string>{}(target.category));
+  category_map << category_hash;
 
-    if (!filesystem::is_directory(child)) {
-      cout << target_t::get_hash(child);
-    }
+  ofstream category_object_file = objects_path / category_hash;
+  category_object_file << target.hash();
 
-    cout << endl;
-  }
+  ofstream target_map = objects_path / to_string(target.hash());
+
   return true;
 }
 
@@ -47,7 +48,7 @@ std::tm *current_localtime() {
   return std::localtime(&current_time_t);
 }
 
-filesystem::path destination_path(std::tm *time, target_t target,
+filesystem::path destination_path(std::tm *time, target target,
                                   filesystem::path backup_root_path) {
   int year = time->tm_year + 1900;
   int month = time->tm_mon + 1;
