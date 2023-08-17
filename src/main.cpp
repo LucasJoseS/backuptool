@@ -11,6 +11,6 @@ int main() {
     cout << "saving:  " << actual_target.category << endl;
     cout << "in path: " << actual_target.root_path << endl;
 
-    backuptool::backup::object_backup(actual_target, config.backup_root_path);
+    backuptool::backup::simple_backup(actual_target, config.backup_root_path);
   }
 }
