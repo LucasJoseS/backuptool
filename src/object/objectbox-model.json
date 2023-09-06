@@ -1,0 +1,69 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:5273310822014120538",
+      "lastPropertyId": "3:8910054242339236288",
+      "name": "Dir",
+      "properties": [
+        {
+          "id": "1:8781864133527138579",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6485923409973433079",
+          "name": "child_dirs",
+          "indexId": "1:3674306967133091017",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Dir"
+        },
+        {
+          "id": "3:8910054242339236288",
+          "name": "child_files",
+          "indexId": "2:3084899737278824049",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "File"
+        }
+      ]
+    },
+    {
+      "id": "2:6611680674991512449",
+      "lastPropertyId": "3:2693003018613535851",
+      "name": "File",
+      "properties": [
+        {
+          "id": "1:5836909812952743470",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7866595881051383089",
+          "name": "filename",
+          "type": 9
+        },
+        {
+          "id": "3:2693003018613535851",
+          "name": "content",
+          "type": 9
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "2:6611680674991512449",
+  "lastIndexId": "2:3084899737278824049",
+  "lastRelationId": "",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

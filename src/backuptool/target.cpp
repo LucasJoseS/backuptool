@@ -1,4 +1,6 @@
+#include <algorithm>
 #include <backuptool.hpp>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 
@@ -19,31 +21,23 @@ string get_data(filesystem::path file_path) {
                       std::string(file_path) + " )");
 }
 
-size_t target::hash() {
-  if (filesystem::is_directory(this->root_path)) {
-    return std::hash<string>{}(this->root_path.string());
-  }
+vector<filesystem::path> target::childs() {
+  vector<filesystem::path> buff;
+  vector<filesystem::path> dirs = {this->root_path};
 
-  return std::hash<string>{}(get_data(this->root_path));
-};
+  while (!dirs.empty()) {
+    auto childs = filesystem::directory_iterator(dirs.back());
+    dirs.pop_back();
 
-vector<target> target::childs() {
-  if (this->childs_cache.empty()) {
-    vector<filesystem::path> dirs = { this->root_path };
-
-    while (!dirs.empty()) {
-      auto childs = filesystem::directory_iterator(dirs.back());
-      dirs.pop_back();
-
-      for (auto child : childs) {
-        if (filesystem::is_directory(child)) {
-          dirs.push_back(child);
-        }
-
-        this->childs_cache.push_back(target(this->category, child));
+    for (auto child : childs) {
+      if (filesystem::is_directory(child)) {
+        dirs.push_back(child);
       }
+
+      buff.push_back(child);
     }
   }
 
-  return this->childs_cache;
+  sort(buff.begin(), buff.end());
+  return buff;
 }

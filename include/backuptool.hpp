@@ -1,17 +1,10 @@
 #ifndef BACKUPTOOL
 #define BACKUPTOOL
-#include <cstddef>
 #include <cstdint>
 #include <filesystem>
-#include <functional>
-#include <map>
-#include <vector>
 #include <yaml-cpp/yaml.h>
 
 class target {
-private:
-  std::vector<target> childs_cache;
-
 public:
   std::filesystem::path root_path;
   std::string category;
@@ -21,21 +14,23 @@ public:
     this->root_path = root_path;
   }
 
-  std::size_t hash();
-  std::vector<target> childs();
+  std::vector<std::filesystem::path> childs();
 };
 
-typedef struct {
+namespace backuptool {
+class config {
+public:
+  const static int8_t BACKUP_ROOT_PATH_IS_NOT_DEFINED = 1;
+  const static int8_t BACKUP_HAS_NO_TARGETS = 2;
+
   std::filesystem::path backup_root_path;
   std::vector<target> targets;
-} config_t;
 
-namespace backuptool::config {
-config_t get_user_config();
-}
+  int static get_user_config(config *) noexcept;
+};
+} // namespace backuptool
 
 namespace backuptool::backup {
-int simple_backup(target target, std::filesystem::path backup_root_path);
-int object_backup(target target, std::filesystem::path backup_root_path);
+void local_backup(target target, std::filesystem::path backup_root_path);
 } // namespace backuptool::backup
 #endif

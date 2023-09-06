@@ -1,0 +1,16 @@
+table Dir {
+  id: ulong;
+
+  /// objectbox:relation=Dir
+  child_dirs: ulong;
+
+  /// objectbox:relation=File
+  child_files: ulong;
+}
+
+table File {
+  id: ulong;
+
+  filename: string;
+  content: string;
+}
