@@ -1,4 +1,4 @@
-add_library(backup-lib
+add_library(backup
   backuptool/backup.cpp
   backuptool/config.cpp
   backuptool/target.cpp
@@ -6,7 +6,8 @@ add_library(backup-lib
   object/object.obx.cpp
   )
 
-target_link_libraries(backup-lib
+target_link_libraries(backup
   yaml-cpp
   objectbox
+  CLI11
   )

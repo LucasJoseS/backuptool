@@ -1,35 +1,42 @@
 #include <backuptool.hpp>
+#include <filesystem>
 #include <fstream>
+#include <map>
 
 using namespace std;
 
-int backuptool::config::get_user_config(backuptool::config *config) noexcept {
-  string home = getenv("HOME");
-  ifstream config_stream(home + "/.config/backuptool.conf");
+class ConfigError {
+public:
+  ConfigError(const string &msg) : msg_(msg) {}
+  ~ConfigError() {}
 
-  if (config_stream.is_open()) {
-    auto yaml = YAML::Load(config_stream);
+  string getMessage() const { return msg_; }
 
-    try {
-      config->backup_root_path =
-          yaml["general"]["backup-root-path"].as<string>();
-    } catch (YAML::BadConversion) {
-      return backuptool::config::BACKUP_ROOT_PATH_IS_NOT_DEFINED;
-    }
+private:
+  string msg_;
+};
 
-    try {
-      auto targets = yaml["backup"];
+backuptool::config::config() {
+  filesystem::path config_root_path = getenv("HOME");
+  config_root_path += "/.config/backuptool.conf";
 
-      for (auto target : targets) {
-        string category = target.first.as<string>();
-        filesystem::path target_root_path = target.second.as<string>();
+  ifstream config_stream(config_root_path);
 
-        config->targets.push_back(::target(category, target_root_path));
-      }
-    } catch (YAML::BadConversion) {
-      return backuptool::config::BACKUP_HAS_NO_TARGETS;
-    }
+  node = YAML::Load(config_stream);
+  backup_root_path = node["general"]["backup-root-path"].as<string>();
+
+  auto targets = node["backup"];
+  for (auto current : targets) {
+    string category = current.first.as<string>();
+    filesystem::path target_root_path = current.second.as<string>();
+
+    this->targets.push_back(target(category, target_root_path));
   }
+}
 
-  return 0;
+backuptool::config::~config() {
+  ofstream config_stream(config_root_path);
+
+  string yaml_text = YAML::Dump(node);
+  config_stream.write(yaml_text.c_str(), yaml_text.size());
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.5)
 
 project(Backup-Toolkit CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -20,14 +20,21 @@ FetchContent_Declare (
   GIT_TAG         0.8.0
 )
 
+FetchContent_Declare (
+  cli11
+  GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+  GIT_TAG        v2.3.2 
+)
+
 FetchContent_MakeAvailable(objectbox)
 FetchContent_MakeAvailable(yaml-cpp)
+FetchContent_MakeAvailable(cli11)
 
-target_include_directories(backup-lib
+target_include_directories(backup
   PUBLIC include
   PUBLIC src/object
   )
 
 target_link_libraries(backuptool
-  backup-lib
+  backup
 )

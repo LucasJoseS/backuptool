@@ -1,23 +1,49 @@
-#define OBX_CPP_FILE
-
-#include <iostream>
+#include <CLI/CLI.hpp>
 #include <backuptool.hpp>
-#include <objectbox.h>
-#include <objectbox-model.h>
-#include <object.obx.hpp>
+#include <filesystem>
+#include <iostream>
+#include <string>
 
 using namespace std;
 
-int main() {
-  backuptool::config config;
-  backuptool::config::get_user_config(&config);
+static backuptool::config CONFIG;
 
-  cout << "Using backup-root-path: " << config.backup_root_path << endl << endl;
+void backup(target t) {
+  cout << "Using backup-root-path: " << CONFIG.backup_root_path << endl << endl;
 
-  for (target actual_target : config.targets) {
-    cout << "saving:  " << actual_target.category << endl;
-    cout << "in path: " << actual_target.root_path << endl;
+  cout << "saving:  " << t.category << endl;
+  cout << "in path: " << t.root_path << endl;
 
-    backuptool::backup::local_backup(actual_target, config.backup_root_path);
+  backuptool::backup::local_backup(t, CONFIG.backup_root_path);
+}
+
+void backup(string categoty, filesystem::path t_path) {
+  backup(target(categoty, t_path));
+}
+
+void backup() {
+  for (target t : CONFIG.targets) {
+    backup(t);
   }
+}
+
+void commands(CLI::App *app) {
+  auto sbackup = app->add_subcommand("backup", "Execute a backup");
+  auto sconfig = app->add_subcommand("config", "Config manipulation");
+
+  sbackup->callback([&]() { backup(); });
+
+  auto sctarget = sconfig->add_subcommand("target", "Target manipulation");
+
+  string target_path;
+  sctarget->add_option("--add", target_path, "Add a target")->type_name("path");
+}
+
+int main(int argc, char **argv) {
+  CLI::App app{"A backup toolkit"};
+  app.require_subcommand(true);
+
+  commands(&app);
+
+  CLI11_PARSE(app, argc, argv);
 }

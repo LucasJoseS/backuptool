@@ -21,6 +21,7 @@ string get_data(filesystem::path file_path) {
                       std::string(file_path) + " )");
 }
 
+/*
 vector<filesystem::path> target::childs() {
   vector<filesystem::path> buff;
   vector<filesystem::path> dirs = {this->root_path};
@@ -41,3 +42,4 @@ vector<filesystem::path> target::childs() {
   sort(buff.begin(), buff.end());
   return buff;
 }
+*/
