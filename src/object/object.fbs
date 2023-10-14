@@ -1,5 +1,0 @@
-table File {
-  id: ulong;
-
-  filename: string;
-}
