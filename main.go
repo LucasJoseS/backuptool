@@ -41,6 +41,9 @@ func localBackup(category string, src string, config Config) {
 
 	cmd = exec.Command("cp", "--recursive", src, destination_root+"/"+last)
 	err = cmd.Run()
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
 func main() {
