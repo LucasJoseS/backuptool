@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -9,6 +10,7 @@ import (
 type Config struct {
 	BackupRootPath string            `yaml:"backup-root-path"`
 	Targets        map[string]string `yaml:"backup"`
+	BackupCooldown time.Duration     `yaml:"cooldown"`
 }
 
 func New() Config {

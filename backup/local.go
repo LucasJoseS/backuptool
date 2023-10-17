@@ -17,9 +17,9 @@ func LocalBackup(category string, src string, config config.Config) {
 	cmd := exec.Command("mkdir", "--parents", destination_root)
 	cmd.Run()
 
-	cmd = exec.Command("cp", "--recursive", src, destination_root+"/"+last)
+	cmd = exec.Command("cp", "--recursive", "--force",  src, destination_root+"/"+last)
 	err := cmd.Run()
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 }
