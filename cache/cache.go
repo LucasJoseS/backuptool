@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"fmt"
 	"os"
 	"time"
 
@@ -27,8 +26,6 @@ func New() Cache {
 	if cache.LastBackupTime == beginning {
 		cache.LastBackupTime = time.Now()
 	}
-
-	fmt.Println(cache)
 
 	return cache
 }

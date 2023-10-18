@@ -10,6 +10,7 @@ import (
 type Config struct {
 	BackupRootPath string            `yaml:"backup-root-path"`
 	Targets        map[string]string `yaml:"backup"`
+	StaticTargets  map[string]string `yaml:"static-backup"`
 	BackupCooldown time.Duration     `yaml:"cooldown"`
 }
 
