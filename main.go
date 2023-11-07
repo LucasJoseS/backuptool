@@ -5,13 +5,11 @@ import (
 	"time"
 
 	"github.com/backuptool/backup"
-	"github.com/backuptool/cache"
 	"github.com/backuptool/config"
 )
 
 func main() {
 	config := config.New()
-	cache := cache.New()
 
 	println("Backup root path: ", config.BackupRootPath)
 
@@ -33,6 +31,4 @@ func main() {
 
 		backup.LocalBackup(category, path, destination)
 	}
-
-	cache.UpdateLastBackupTime()
 }

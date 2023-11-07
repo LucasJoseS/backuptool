@@ -2,7 +2,6 @@ package config
 
 import (
 	"os"
-	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -11,7 +10,6 @@ type Config struct {
 	BackupRootPath string            `yaml:"backup-root-path"`
 	Targets        map[string]string `yaml:"backup"`
 	StaticTargets  map[string]string `yaml:"static-backup"`
-	BackupCooldown time.Duration     `yaml:"cooldown"`
 }
 
 func New() Config {
@@ -20,7 +18,7 @@ func New() Config {
 
 	f, err := os.ReadFile(config_path)
 	if err != nil {
-		panic(err)
+		panic(config_path + " not exists.")
 	}
 
 	yaml.Unmarshal(f, &config)
