@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/backuptool/backup"
@@ -11,11 +12,16 @@ import (
 func main() {
 	config := config.New()
 
+  if (config.BackupRootPath == "") {
+    println("Set a valid backup-root-path in the config.")
+    os.Exit(1)
+  }
+
 	println("Backup root path: ", config.BackupRootPath)
 
 	timestamp := time.Now()
 	for category, path := range config.Targets {
-		fmt.Printf("Categoty: %-20s, Target: %s\n", category, path)
+		fmt.Printf("Categoty: %-25s | Target: %s\n", category, path)
 
 		destination := config.BackupRootPath
 		destination += fmt.Sprintf("/%v/%s/%v", timestamp.Year(), timestamp.Month().String(), timestamp.Day())
@@ -24,7 +30,7 @@ func main() {
 	}
 
 	for category, path := range config.StaticTargets {
-		fmt.Printf("Categoty: % -20s, Static target: %s\n", category, path)
+		fmt.Printf("Categoty: % -25s | Static target %s\n", category, path)
 
 		destination := config.BackupRootPath
 		destination += "/Static"

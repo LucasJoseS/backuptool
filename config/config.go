@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -18,7 +19,12 @@ func New() Config {
 
 	f, err := os.ReadFile(config_path)
 	if err != nil {
-		panic(config_path + " not exists.")
+    f, err := os.Create(config_path)
+    if err != nil {
+      panic("Config file can't be created")
+
+      fmt.Fprintln(f, "# vim: set ft=yaml :")
+    }
 	}
 
 	yaml.Unmarshal(f, &config)
