@@ -7,7 +7,7 @@ import (
 
 func LocalBackup(category string, src string, destination string) {
 	last := path.Base(src)
-  destination += "/" + category + "/"
+    destination += "/" + category + "/"
 
 	cmd := exec.Command("mkdir", "--parents", destination)
 	cmd.Run()

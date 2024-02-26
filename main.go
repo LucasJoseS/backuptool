@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/backuptool/backup"
@@ -11,11 +10,6 @@ import (
 
 func main() {
 	config := config.New()
-
-  if (config.BackupRootPath == "") {
-    println("Set a valid backup-root-path in the config.")
-    os.Exit(1)
-  }
 
 	println("Backup root path: ", config.BackupRootPath)
 

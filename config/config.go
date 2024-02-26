@@ -19,14 +19,19 @@ func New() Config {
 
 	f, err := os.ReadFile(config_path)
 	if err != nil {
-    f, err := os.Create(config_path)
-    if err != nil {
-      panic("Config file can't be created")
+        f, err := os.Create(config_path)
+        if err != nil {
+          panic("Config file can't be created")
+        }
 
-      fmt.Fprintln(f, "# vim: set ft=yaml :")
-    }
+        fmt.Fprintln(f, "# vim: set ft=yaml :")
 	}
 
 	yaml.Unmarshal(f, &config)
+
+    if err == nil && config.BackupRootPath == "" {
+        panic("Set a valid backup-root-path in the config file: " + config_path)
+    }
+
 	return config
 }
